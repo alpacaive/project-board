@@ -2,15 +2,13 @@ package alpacaive.projectboard.service;
 
 import alpacaive.projectboard.domain.type.SearchType;
 import alpacaive.projectboard.dto.ArticleDto;
-import alpacaive.projectboard.dto.ArticleUpdateDto;
+import alpacaive.projectboard.dto.ArticleWithCommentsDto;
 import alpacaive.projectboard.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -21,12 +19,12 @@ public class ArticleService {
 
 
     @Transactional(readOnly = true)
-    public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword) {
+    public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
         return Page.empty();
     }
 
     @Transactional(readOnly = true)
-    public ArticleDto searchArticle(long l) {
+    public ArticleWithCommentsDto getArticle(Long articleId) {
         return null;
     }
 
@@ -34,11 +32,12 @@ public class ArticleService {
 
     }
 
-    public void updateArticle(long articleId, ArticleUpdateDto dto) {
+    public void updateArticle(ArticleDto dto) {
 
     }
 
     public void deleteArticle(long articleId) {
 
     }
+
 }
