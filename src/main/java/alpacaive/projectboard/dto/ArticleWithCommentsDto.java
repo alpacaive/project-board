@@ -14,8 +14,8 @@ public record ArticleWithCommentsDto (
     String title,
     String content,
     String hashtag,
-    LocalDateTime createAt,
-    String createBy,
+    LocalDateTime createdAt,
+    String createdBy,
     LocalDateTime modifiedAt,
     String modifiedBy
 ) {
