@@ -52,7 +52,7 @@ class JpaRepositoryTest {
     void give_when_then2() {
         // given
         long previousCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("Zeus", "pw", null, null, null));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("newZeus", "pw", null, null, null));
         Article article = Article.of(userAccount, "new article", "new content", "#spring");
 
         // when
