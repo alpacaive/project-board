@@ -1,4 +1,4 @@
-package alpacaive.projectboard.domain.type;
+package alpacaive.projectboard.domain.constant;
 
 import lombok.Getter;
 
