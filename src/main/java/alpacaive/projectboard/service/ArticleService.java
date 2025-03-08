@@ -64,24 +64,26 @@ public class ArticleService {
     public void updateArticle(Long articleId, ArticleDto dto) {
         try {
             Article article = articleRepository.getReferenceById(articleId);
-            if(dto.title() != null) {
-                article.setTitle(dto.title());
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+
+            if(article.getUserAccount().equals(userAccount)) {
+                if (dto.title() != null) {
+                    article.setTitle(dto.title());
+                }
+                if (dto.content() != null) {
+                    article.setContent(dto.content());
+                }
+
+                article.setHashtag(dto.hashtag());
+                // articleRepository.save(article); -> @Transactional 어노테이션에 의해서 메서드 단위로 트랜잭션이 묶여있어서 트랜잭션 끝날때 영속성 컨텍스트에서 변경감지해서 Update 쿼리 날림
             }
-
-            if(dto.content() != null) {
-                article.setContent(dto.content());
-            }
-
-            article.setHashtag(dto.hashtag());
-
-//        articleRepository.save(article); -> @Transactional 어노테이션에 의해서 메서드 단위로 트랜잭션이 묶여있어서 트랜잭션 끝날때 영속성 컨텍스트에서 변경감지해서 Update 쿼리 날림
         } catch (EntityNotFoundException e) {
-            log.warn("게시글 업데이트 실패. 게시글을 찾을 수 없습니다 - dto: {}", dto);
+            log.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - dto: {}", e.getLocalizedMessage());
         }
     }
 
-    public void deleteArticle(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void deleteArticle(long articleId, String userId) {
+        articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
     }
 
     public long getArticleCount() {
