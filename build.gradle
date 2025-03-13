@@ -96,3 +96,10 @@ tasks.withType(JavaCompile) {
 clean.doLast {
     file(querydslDir).deleteDir()
 }
+
+// Heroku 설정
+jar {
+    manifest {
+        attributes('Main-Class': 'alpacaive.projectboard.ProjectBoardApplication')
+    }
+}
