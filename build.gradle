@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'alpacaive'
-version = '0.0.1-SNAPSHOT'
+version = 'v1.1'
 
 java {
     toolchain {
