@@ -44,3 +44,6 @@ Spring Boot
 * Issues: 버그 리포트, 제안 사항
 * Discussions: 프로젝트와 관련한 논의와 정보
  
+## Reference
+* 유즈케이스 다이어그램: https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=use-case.svg&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Falpacaive%2Fproject-board%2Fmain%2Fdocument%2Fuse-case.svg
+* API Endpoint 구글 시트: https://docs.google.com/spreadsheets/d/1qoJFDdwW-M7ZY6hrH1fU4165Sbtbetu1BEtHoqVqX0A/edit?usp=sharing
