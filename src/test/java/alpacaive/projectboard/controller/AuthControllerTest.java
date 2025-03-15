@@ -33,6 +33,7 @@ public class AuthControllerTest {
         this.mvc = mvc;
     }
 
+
     @DisplayName("[view][GET] 로그인 페이지 - 정상 호출")
     @Test
     public void givenNothing_whenTryingToLogin_thenReturnsLogInView() throws Exception {

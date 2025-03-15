@@ -1,6 +1,5 @@
 package alpacaive.projectboard.controller;
 
-import alpacaive.projectboard.dto.UserAccountDto;
 import alpacaive.projectboard.dto.request.ArticleCommentRequest;
 import alpacaive.projectboard.dto.security.BoardPrincipal;
 import alpacaive.projectboard.service.ArticleCommentService;

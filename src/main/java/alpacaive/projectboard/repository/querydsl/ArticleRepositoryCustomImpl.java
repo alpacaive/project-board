@@ -12,7 +12,6 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
         super(Article.class);
     }
 
-
     @Override
     public List<String> findAllDistinctHashtags() {
         QArticle article = QArticle.article;

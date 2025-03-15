@@ -1,6 +1,5 @@
 package alpacaive.projectboard.repository;
 
-import alpacaive.projectboard.domain.Article;
 import alpacaive.projectboard.domain.ArticleComment;
 import alpacaive.projectboard.domain.QArticleComment;
 import com.querydsl.core.types.dsl.DateTimeExpression;
@@ -31,4 +30,5 @@ public interface ArticleCommentRepository extends
         bindings.bind(root.createdAt).first(DateTimeExpression::eq);
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
     }
+
 }

@@ -2,7 +2,6 @@ package alpacaive.projectboard.dto.response;
 
 import alpacaive.projectboard.dto.ArticleDto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record ArticleResponse(

@@ -1,6 +1,5 @@
 package alpacaive.projectboard.controller;
 
-import alpacaive.projectboard.config.SecurityConfig;
 import alpacaive.projectboard.config.TestSecurityConfig;
 import alpacaive.projectboard.dto.ArticleCommentDto;
 import alpacaive.projectboard.dto.request.ArticleCommentRequest;
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;

@@ -2,7 +2,6 @@ package alpacaive.projectboard.controller;
 
 import alpacaive.projectboard.domain.constant.FormStatus;
 import alpacaive.projectboard.domain.constant.SearchType;
-import alpacaive.projectboard.dto.UserAccountDto;
 import alpacaive.projectboard.dto.request.ArticleRequest;
 import alpacaive.projectboard.dto.response.ArticleResponse;
 import alpacaive.projectboard.dto.response.ArticleWithCommentsResponse;
