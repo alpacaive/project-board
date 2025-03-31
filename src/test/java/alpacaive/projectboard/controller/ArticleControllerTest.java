@@ -6,6 +6,7 @@ import alpacaive.projectboard.domain.constant.FormStatus;
 import alpacaive.projectboard.domain.constant.SearchType;
 import alpacaive.projectboard.dto.ArticleDto;
 import alpacaive.projectboard.dto.ArticleWithCommentsDto;
+import alpacaive.projectboard.dto.HashtagDto;
 import alpacaive.projectboard.dto.UserAccountDto;
 import alpacaive.projectboard.dto.request.ArticleRequest;
 import alpacaive.projectboard.dto.response.ArticleResponse;
@@ -77,7 +78,8 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
-                .andExpect(model().attributeExists("searchTypes"));
+                .andExpect(model().attributeExists("searchTypes"))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
         then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
@@ -93,9 +95,9 @@ class ArticleControllerTest {
 
         // when & then
         mvc.perform(
-                get("/articles")
-                        .queryParam("searchType", searchType.name())
-                        .queryParam("searchValue", searchValue)
+                    get("/articles")
+                            .queryParam("searchType", searchType.name())
+                            .queryParam("searchValue", searchValue)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
@@ -121,7 +123,7 @@ class ArticleControllerTest {
 
         // when & then
         mvc.perform(
-                        get("/articles")
+                    get("/articles")
                                 .queryParam("page", String.valueOf(pageNumber))
                                 .queryParam("size", String.valueOf(pageSize))
                                 .queryParam("sort", sortName + "," + direction)
@@ -167,7 +169,8 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"))
                 .andExpect(model().attributeExists("articleComments"))
-                .andExpect(model().attribute("totalCount", totalCount));
+                .andExpect(model().attribute("totalCount", totalCount))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
         then(articleService).should().getArticleWithComments(articleId);
         then(articleService).should().getArticleCount();
     }
@@ -219,8 +222,9 @@ class ArticleControllerTest {
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1, 2, 3, 4, 5));
 
         // when & then
-        mvc.perform(get("/articles/search-hashtag")
-                        .queryParam("searchValue", hashtag)
+        mvc.perform(
+                    get("/articles/search-hashtag")
+                            .queryParam("searchValue", hashtag)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
@@ -253,16 +257,16 @@ class ArticleControllerTest {
     @Test
     void givenArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
         // given
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).saveArticle(any(ArticleDto.class));
 
         // when & then
         mvc.perform(
-                post("/articles/form")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .content(formDataEncoder.encode(articleRequest))
-                        .with(csrf())
-        )
+                    post("/articles/form")
+                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .content(formDataEncoder.encode(articleRequest))
+                            .with(csrf())
+                )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles"))
                 .andExpect(redirectedUrl("/articles"));
@@ -285,7 +289,7 @@ class ArticleControllerTest {
     @WithMockUser
     @DisplayName("[view][GET] 게시글 수정 페이지 - 정상 호출, 인증된 사용자")
     @Test
-    void givenNothing_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
+    void givenAuthorizedUser_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
         // given
         long articleId = 1L;
         ArticleDto dto = createArticleDto();
@@ -307,16 +311,16 @@ class ArticleControllerTest {
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
         // given
         long articleId = 1L;
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).updateArticle(eq(articleId), any(ArticleDto.class));
 
         // when & then
         mvc.perform(
-                post("/articles/" + articleId + "/form")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .content(formDataEncoder.encode(articleRequest))
-                        .with(csrf())
-        )
+                    post("/articles/" + articleId + "/form")
+                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .content(formDataEncoder.encode(articleRequest))
+                            .with(csrf())
+                )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles/" + articleId))
                 .andExpect(redirectedUrl("/articles/" + articleId));
@@ -334,10 +338,10 @@ class ArticleControllerTest {
 
         // when & then
         mvc.perform(
-                post("/articles/" + articleId + "/delete")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .with(csrf())
-        )
+                    post("/articles/" + articleId + "/delete")
+                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .with(csrf())
+                )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles"))
                 .andExpect(redirectedUrl("/articles"));
@@ -350,7 +354,7 @@ class ArticleControllerTest {
                 createUserAccountDto(),
                 "title",
                 "content",
-                "#java"
+                Set.of(HashtagDto.of("java"))
         );
     }
 
@@ -361,7 +365,7 @@ class ArticleControllerTest {
                 Set.of(),
                 "title",
                 "content",
-                "#java",
+                Set.of(HashtagDto.of("java")),
                 LocalDateTime.now(),
                 "Zeus",
                 LocalDateTime.now(),
