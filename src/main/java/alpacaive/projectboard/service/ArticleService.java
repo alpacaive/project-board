@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -38,7 +39,11 @@ public class ArticleService {
             case CONTENT -> articleRepository.findByContentContaining(searchKeyword, pageable).map(ArticleDto::from);
             case ID -> articleRepository.findByUserAccount_UserIdContaining(searchKeyword, pageable).map(ArticleDto::from);
             case NICKNAME -> articleRepository.findByUserAccount_NicknameContaining(searchKeyword, pageable).map(ArticleDto::from);
-            case HASHTAG -> articleRepository.findByHashtag("#" + searchKeyword, pageable).map(ArticleDto::from);
+            case HASHTAG -> articleRepository.findByHashtagNames(
+                    Arrays.stream(searchKeyword.split(" ")).toList(),
+                    pageable
+            )
+                    .map(ArticleDto::from);
         };
     }
 
@@ -74,7 +79,6 @@ public class ArticleService {
                     article.setContent(dto.content());
                 }
 
-                article.setHashtag(dto.hashtag());
                 // articleRepository.save(article); -> @Transactional 어노테이션에 의해서 메서드 단위로 트랜잭션이 묶여있어서 트랜잭션 끝날때 영속성 컨텍스트에서 변경감지해서 Update 쿼리 날림
             }
         } catch (EntityNotFoundException e) {
@@ -96,7 +100,7 @@ public class ArticleService {
             return Page.empty(pageable);
         }
 
-        return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDto::from);
+        return articleRepository.findByHashtagNames(null, pageable).map(ArticleDto::from);
     }
 
     public List<String> getHashtags() {

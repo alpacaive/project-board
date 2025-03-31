@@ -2,6 +2,7 @@ package alpacaive.projectboard.service;
 
 import alpacaive.projectboard.domain.Article;
 import alpacaive.projectboard.domain.ArticleComment;
+import alpacaive.projectboard.domain.Hashtag;
 import alpacaive.projectboard.domain.UserAccount;
 import alpacaive.projectboard.dto.ArticleCommentDto;
 import alpacaive.projectboard.dto.UserAccountDto;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -164,7 +166,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -181,12 +183,19 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
+    }
+
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
     }
 
 }
